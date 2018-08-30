@@ -165,7 +165,7 @@ func (s *Sentry) SetKeyFunc(fn KeyFunc) {
 }
 
 // GetKeyCh Returning key channel
-func (s *Sentry) GetKeyCh() <-chan *api.KVPair {
+func (s *Sentry) GetKeyCh() chan *api.KVPair {
 	ch := make(chan *api.KVPair)
 	s.rwMux.Lock()
 	s.keyChs[ch] = struct{}{}
@@ -209,7 +209,7 @@ func (s *Sentry) SetKeyPrefixFunc(fn KeyPrefixFunc) {
 }
 
 // GetKeyPrefixCh Returning key prefix channel
-func (s *Sentry) GetKeyPrefixCh() <-chan api.KVPairs {
+func (s *Sentry) GetKeyPrefixCh() chan api.KVPairs {
 	ch := make(chan api.KVPairs)
 	s.rwMux.Lock()
 	s.keyPrefixChs[ch] = struct{}{}
@@ -253,7 +253,7 @@ func (s *Sentry) SetServicesFunc(fn ServicesFunc) {
 }
 
 // GetServicesCh Returning services channel
-func (s *Sentry) GetServicesCh() <-chan map[string][]string {
+func (s *Sentry) GetServicesCh() chan map[string][]string {
 	ch := make(chan map[string][]string)
 	s.rwMux.Lock()
 	s.servicesChs[ch] = struct{}{}
@@ -297,7 +297,7 @@ func (s *Sentry) SetNodesFunc(fn NodesFunc) {
 }
 
 // GetNodesCh Returning nodes channel
-func (s *Sentry) GetNodesCh() <-chan []*api.Node {
+func (s *Sentry) GetNodesCh() chan []*api.Node {
 	ch := make(chan []*api.Node)
 	s.rwMux.Lock()
 	s.nodesChs[ch] = struct{}{}
@@ -341,7 +341,7 @@ func (s *Sentry) SetServiceFunc(fn ServiceFunc) {
 }
 
 // GetServiceCh Returning service channel
-func (s *Sentry) GetServiceCh() <-chan []*api.ServiceEntry {
+func (s *Sentry) GetServiceCh() chan []*api.ServiceEntry {
 	ch := make(chan []*api.ServiceEntry)
 	s.rwMux.Lock()
 	s.serviceChs[ch] = struct{}{}
@@ -385,7 +385,7 @@ func (s *Sentry) SetChecksFunc(fn ChecksFunc) {
 }
 
 // GetChecksCh Returning nodes channel
-func (s *Sentry) GetChecksCh() <-chan []*api.HealthCheck {
+func (s *Sentry) GetChecksCh() chan []*api.HealthCheck {
 	ch := make(chan []*api.HealthCheck)
 	s.rwMux.Lock()
 	s.checksChs[ch] = struct{}{}
@@ -429,7 +429,7 @@ func (s *Sentry) SetEventFunc(fn EventFunc) {
 }
 
 // GetEventCh Returning event channel
-func (s *Sentry) GetEventCh() <-chan []*api.UserEvent {
+func (s *Sentry) GetEventCh() chan []*api.UserEvent {
 	ch := make(chan []*api.UserEvent)
 	s.rwMux.Lock()
 	s.eventChs[ch] = struct{}{}
