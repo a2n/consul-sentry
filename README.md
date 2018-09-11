@@ -15,7 +15,7 @@ According to Consul agent [watch](https://www.consul.io/docs/agent/watches.html)
 *  `event`
 
 ## Example
-Please referring sample codes in [`examples`](example)
+Please referring sample codes in [`examples`](examples)
 
 [doc-img]: https://godoc.org/github.com/a2n/consul-sentry?status.svg
 [doc]: https://godoc.org/github.com/a2n/consul-sentry
