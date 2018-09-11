@@ -14,7 +14,8 @@ import (
 
 // Sentry Sentry
 type Sentry struct {
-	addr string
+	addr  string
+	route string
 
 	// callbacks
 	keyFunc       KeyFunc
@@ -35,6 +36,9 @@ type Sentry struct {
 	serviceChs   map[chan []*api.ServiceEntry]struct{}
 	checksChs    map[chan []*api.HealthCheck]struct{}
 	eventChs     map[chan []*api.UserEvent]struct{}
+
+	// indexs
+	idx map[uint64]struct{}
 }
 
 // NewSentry Creating
@@ -47,12 +51,18 @@ func NewSentry() *Sentry {
 		serviceChs:   map[chan []*api.ServiceEntry]struct{}{},
 		checksChs:    map[chan []*api.HealthCheck]struct{}{},
 		eventChs:     map[chan []*api.UserEvent]struct{}{},
+		idx:          map[uint64]struct{}{},
 	}
 }
 
 // SetAddress Setting web server address
 func (s *Sentry) SetAddress(a string) {
 	s.addr = a
+}
+
+// SetRoute Setting route.
+func (s *Sentry) SetRoute(r string) {
+	s.route = r
 }
 
 // Start Starting notifier
@@ -66,7 +76,7 @@ func (s *Sentry) Start() error {
 
 // startHTTPDaemon Starting HTTP daemon
 func (s *Sentry) startHTTPDaemon() error {
-	http.HandleFunc("/", s.handler)
+	http.HandleFunc(s.route, s.handler)
 	zap.L().Debug(
 		"starting http daemon",
 		zap.String("address", s.addr),
@@ -82,6 +92,26 @@ func (s *Sentry) startHTTPDaemon() error {
 // Known bug, https://github.com/hashicorp/consul/issues/571
 // Fires watch event two times.
 func (s *Sentry) handler(w http.ResponseWriter, r *http.Request) {
+	// idx, e := strconv.ParseUint(r.Header.Get("X-Consul-Index"), 10, 64)
+	// if e != nil {
+	// 	w.WriteHeader(http.StatusBadGateway)
+	// 	zap.L().Error(
+	// 		"no X-Consul-Index header",
+	// 		zap.String("remote addr", r.RemoteAddr),
+	// 	)
+	// 	return
+	// }
+	// s.rwMux.RLock()
+	// _, ok := s.idx[idx]
+	// s.rwMux.RUnlock()
+	// if ok == true {
+	// 	w.WriteHeader(http.StatusOK)
+	// 	return
+	// }
+	// s.rwMux.Lock()
+	// s.idx[idx] = struct{}{}
+	// s.rwMux.Unlock()
+
 	t := strings.ToLower(r.Header.Get("type"))
 	b, e := ioutil.ReadAll(r.Body)
 	if e != nil {
